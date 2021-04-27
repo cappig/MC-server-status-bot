@@ -4,12 +4,18 @@
 
 ## *Commands*
 Admin command:
+
 `mc!log [on/off]` Turn logging on or off. 
+
 `mc!setip [ip]` Set the main ip. This will edit config.json
+
 `mc!setup` Create the two channels that will display the server status.
+
 `mc!setupdint [number in minutes]` Set how often the two voice channels update their status.
 
+
 Normal commands:
+
 `mc!ping [ip]` Ping a specified ip. You can use the command with no arguments to ping the ip specified in the json file.
 
 <br>
