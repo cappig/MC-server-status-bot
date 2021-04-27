@@ -20,33 +20,33 @@ const updateChannel = async () => {
     if(!(client.channels.cache.get(jsonf.CID).name == jsonf.IP + `'s status`)) {
         client.channels.cache.get(jsonf.CID).setName(jsonf.IP + `'s status`)
     }
-    
-    let url = `https://api.mcsrvstat.us/2/${jsonf.IP}`;
 
-    fetch(url, { method: "Get" })
-        .then(res => res.json())
-        .then((json) => {
+    fetch(`https://api.mcsrvstat.us/2/${jsonf.IP}`).then(async response => {
+        try {
+            const json = await response.json();
 
-        if(json.online == true) {
-            client.channels.cache.get(jsonf.SID).setName('🟢 ONLINE')
-        }else {
-            client.channels.cache.get(jsonf.SID).setName('🔴 OFFLINE')
-        }
+            if(json.online == true) {
+                client.channels.cache.get(jsonf.SID).setName('🟢 ONLINE');
+                const chann = client.channels.cache.get(jsonf.NID)
+                chann.updateOverwrite(chann.guild.roles.everyone, { VIEW_CHANNEL: true });
+                chann.setName(`👥 Players online: ${json.players.online}`);
 
-        client.channels.cache.get(jsonf.NID).setName(`👥 Players online: ${json.players.online}`)
-
-        // Log the status of the server to a file (log.csv)
-        if (jsonf.LOGGING == 'on') {
-            if (fs.existsSync('./log.csv') == false) { 
-                fs.writeFileSync('log.csv', 'time,ip,online,playersonline,playersmax\n');
+                var logdata =  `${Date.now()},${jsonf.IP},${json.online},${json.players.online},${json.players.max}\n`;
+            }else {
+                client.channels.cache.get(jsonf.SID).setName('🔴 OFFLINE');
+                client.channels.cache.get(jsonf.NID).updateOverwrite(client.channels.cache.get(jsonf.NID).guild.roles.everyone, { VIEW_CHANNEL: false });
+                var logdata = `${Date.now()},${jsonf.IP},${json.online},x,x\n`
             }
+    
+            if (!(jsonf.LOGGING == 'on')) return;
+            fs.writeFileSync('log.csv', logdata, {'flag':'a'});
+            console.log('Just logged a change!');
 
-            fs.writeFileSync('log.csv', `${Date.now()},${jsonf.IP},${json.online},${json.players.online},${json.players.max}\n`, {'flag':'a'});
-                console.log('Just logged a change!')
-            } 
-        }        
-    );
-}
+        } catch(error) {
+            console.error(error);
+        }
+    }
+)}
 
 client.once('ready', () => {
     console.log('The bot is up and running!');
@@ -61,7 +61,7 @@ client.once('ready', () => {
     // Call the function that will ping the specifed server, update the channel names, log etc.
     setInterval(() => {
         updateChannel()
-    },ms(jsonf.UPINT))
+    }, ms(jsonf.UPINT))
 });
 
 // Command handeler stuff

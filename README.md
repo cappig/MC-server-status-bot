@@ -1,6 +1,7 @@
 # MC server status bot
 
 ***This bot is still in development and some features aren't yet available***
+The [mcsrvstatus](https://api.mcsrvstat.us/) api is used to get the info about the server.
 
 ## *Commands*
 Admin command:
