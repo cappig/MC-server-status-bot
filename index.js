@@ -13,10 +13,15 @@ const prefix = jsonf.PREFIX;
 
 // This function updates the channels
 const updateChannel = async () => {
-    console.log('sdsdsds')
+    const jsonf = JSON.parse(fs.readFileSync('./config.json', 'utf8'));
     if(!jsonf.SID && !jsonf.NID) return;
 
-    let url = `https://mcapi.us/server/status?ip=${jsonf.IP}`;
+    // Change the name of the category to the right ip if it isnt
+    if(!(client.channels.cache.get(jsonf.CID).name == jsonf.IP + `'s status`)) {
+        client.channels.cache.get(jsonf.CID).setName(jsonf.IP + `'s status`)
+    }
+    
+    let url = `https://api.mcsrvstat.us/2/${jsonf.IP}`;
 
     fetch(url, { method: "Get" })
         .then(res => res.json())
@@ -24,12 +29,11 @@ const updateChannel = async () => {
 
         if(json.online == true) {
             client.channels.cache.get(jsonf.SID).setName('🟢 ONLINE')
-        }
-        if(json.online == false) {
+        }else {
             client.channels.cache.get(jsonf.SID).setName('🔴 OFFLINE')
         }
 
-        client.channels.cache.get(jsonf.NID).setName(`👥 Players online: ${json.players.now}`)
+        client.channels.cache.get(jsonf.NID).setName(`👥 Players online: ${json.players.online}`)
 
         // Log the status of the server to a file (log.csv)
         if (jsonf.LOGGING == 'on') {
@@ -37,7 +41,7 @@ const updateChannel = async () => {
                 fs.writeFileSync('log.csv', 'time,ip,online,playersonline,playersmax\n');
             }
 
-            fs.writeFileSync('log.csv', `${Date()},${jsonf.IP},${json.online},${json.players.now},${json.players.max}\n`, {'flag':'a'});
+            fs.writeFileSync('log.csv', `${Date.now()},${jsonf.IP},${json.online},${json.players.online},${json.players.max}\n`, {'flag':'a'});
                 console.log('Just logged a change!')
             } 
         }        
@@ -47,12 +51,17 @@ const updateChannel = async () => {
 client.once('ready', () => {
     console.log('The bot is up and running!');
 
-    client.user.setActivity('for a mc! command', {type: "WATCHING"});
+    if (jsonf.IP) {
+        client.user.setActivity(jsonf.IP, {type: "WATCHING"});
+    } else {
+        client.user.setActivity('your Minecraft server', {type: "WATCHING"});
+    }
+    
 
     // Call the function that will ping the specifed server, update the channel names, log etc.
     setInterval(() => {
         updateChannel()
-    }, ms(jsonf.UPINT))
+    },ms(jsonf.UPINT))
 });
 
 // Command handeler stuff

@@ -31,7 +31,9 @@ The TOKEN is replaced with the bot token.
 
 SID is the status channel id and NID is the number of of players channel id. You can leave these to be blank and use the  `mc!setup` command to automatically create these channels and save the id's to the file or paste thise id's into the json yourself. 
 
-LOGGING can be turned of in the config file or an admin can use the `mc!log [on/off]` command to turn it off or on. 
+LOGGING can be turned of in the config file or an admin can use the `mc!log [on/off]` command to turn it off or on. Time is logged in the [UNIX format](https://en.wikipedia.org/wiki/Unix_time)
+
+`icon.png` is the icon I created and use for the bot. Feel free to use it for yourself.
 
 <br>
 

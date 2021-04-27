@@ -1,3 +1,5 @@
+const fs = require('fs');
+
 module.exports = {
     name:'setip',
     description: 'Set up a default IP andress',
@@ -17,6 +19,6 @@ module.exports = {
         json.IP = args.toString();
 
         fs.writeFileSync('./config.json', JSON.stringify(json, null, 2));
-        message.channel.send(`Logging has been turned ${args.toString()}`)
+        message.channel.send(`The main IP has been set to: ${args.toString()}`)
     }
 }

@@ -25,7 +25,7 @@ module.exports = {
         message.guild.channels.create(`${jsonf.IP}'s status`, {
             type: 'category'
         }) .then(channel=>{
-            var cid = channel.id;
+            jsonf.CID = channel.id;
             channel.updateOverwrite(channel.guild.roles.everyone, { CONNECT: false });
         })
 
@@ -34,15 +34,14 @@ module.exports = {
             type: 'voice'
         }) .then(channel => {
             jsonf.SID = channel.id
-            console.log(cid);
-            channel.setParent(cid)
+            channel.setParent(jsonf.CID)
                 .then(() => channel.lockPermissions())
         })
         message.guild.channels.create('Updating players . . .', {
             type: 'voice'
         }) .then(channel => {
             jsonf.NID = channel.id
-            channel.setParent(cid)
+            channel.setParent(jsonf.CID)
                 .then(() => channel.lockPermissions())
             fs.writeFileSync('./config.json', JSON.stringify(jsonf, null, 2));
         })
