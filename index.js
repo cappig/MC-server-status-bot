@@ -36,11 +36,12 @@ const updateChannel = async () => {
             client.channels.cache.get(jsonf.CID).setName(jsonf.IP + `'s status`);
         }
 
-        fetch(`https://api.mcsrvstat.us/2/${jsonf.IP}`)
-        .then(async response => {
+        fetch(`https://api.mcsrvstat.us/2/${jsonf.IP}`).then(async response => {
             try {
                 const json = await response.json();
-
+	                
+				console.log('Channels updated!');
+				
                 if(json.online == true) {
                     client.channels.cache.get(jsonf.SID).setName('🟢 ONLINE');
                     const chann = client.channels.cache.get(jsonf.NID);
@@ -56,7 +57,7 @@ const updateChannel = async () => {
                 }
 
                 // Log chanhes if logging is turned on
-                if (jsonf.LOGGING == 'on') {
+                if (jsonf.LOGGING == "on") {
                     fs.writeFileSync('log.csv', logdata, {'flag':'a'});
                     console.log('Just logged a change!');
                 }

@@ -28,11 +28,11 @@ You can use the `build.py` python script to quickly build, configure and deploy 
 Usage: `python build.py (-h | -sd | -env) <argument>...`
 
 `-h` - help - will list all the options and arguments.
-`-sd <token>`  - setup and deploy - if you provide a token in the argument it will write it to the config file and start the bot right away. If no argument is provided it will install dependacise and create a empty config file.
-`-env` - env variable - will modify the index.js file so that the TOKEN is stored in a env variable and not the config file. If you provide a token in the argument it will write it to the `.env` file and start the bot right away. If no argument is provided it will install dependacise and create a empty config file with no token option.
+`-sd <token>`  - setup and deploy - if you provide a token in the argument it will write it to the config file and start the bot right away. If no argument is provided it will install dependencies and create a empty config file.
+`-env` - env variable - will modify the index.js file so that the TOKEN is stored in a env variable and not the config file. If you provide a token in the argument it will write it to the `.env` file and start the bot right away. If no argument is provided it will install dependencies and create a empty config file with no token option.
 
 #### *Config file*
-This is the standard empty config file taht the python script will create:
+This is the standard empty config file that the python script will create:
 ```json
 {
     "TOKEN": "",
@@ -46,7 +46,7 @@ This is the standard empty config file taht the python script will create:
 ```
 The TOKEN is replaced with the bot token. 
 
-SID is the status channel id and NID is the number of of players channel id. You can leave these to be blank and use the  `mc!setup` command to automatically create these channels and save the id's to the file or paste thise id's into the json yourself. 
+SID is the status channel id and NID is the number of of players channel id. You can leave these to be blank and use the  `mc!setup` command to automatically create these channels and save the id's to the file or paste these id's into the json yourself. 
 
 LOGGING can be turned of in the config file or an admin can use the `mc!log [on/off]` command to turn it off or on. Time is logged in the [UNIX format](https://en.wikipedia.org/wiki/Unix_time).
 

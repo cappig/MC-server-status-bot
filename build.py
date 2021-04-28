@@ -74,6 +74,9 @@ elif "-env" in opts:
     content['CID'] = ''
     content['UPINT'] = '5min'
 
+    with open('config.json', 'w') as outfile:
+        json.dump(content, outfile, indent=2)
+        
     with open('index.js', 'r+') as f:
         rawfile = f.read()
         f.seek(0, 0)
