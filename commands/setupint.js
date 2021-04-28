@@ -22,6 +22,6 @@ module.exports = {
         json.UPINT = args + 'min';
 
         fs.writeFileSync('./config.json', JSON.stringify(json, null, 2));
-        message.channel.send(`The update interval has been set to ${args} minutes.`)
+        message.channel.send(`The update interval has been set to ${args} minutes. Please restart the bot for the changes to take effect!`)
     }
 }

@@ -16,9 +16,9 @@ module.exports = {
         }
         
         var json = JSON.parse(fs.readFileSync('./config.json', 'utf8'));
-        json.IP = args.toString();
+        json.IP = args;
 
         fs.writeFileSync('./config.json', JSON.stringify(json, null, 2));
-        message.channel.send(`The main IP has been set to: ${args.toString()}`)
+        message.channel.send(`The main IP has been set to: ${args}`)
     }
 }

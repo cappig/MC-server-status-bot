@@ -19,7 +19,7 @@ module.exports = {
                         const attachment = new Discord.MessageAttachment(Buffer.from(json.icon.substr('data:image/png;base64,'.length), 'base64'), "icon.png")
                         const embed = new Discord.MessageEmbed()
                             .setColor('#008000')
-                            .setTitle(`${ip} is online   :green_circle:`)
+                            .setTitle(`${ip} is online`)
                             .setDescription(json.motd.clean)
                             .addFields(
                                 { name: 'Playesrs: ', value: `Online: ${json.players.online}\nMax: ${json.players.max}`, inline: true },
@@ -31,7 +31,7 @@ module.exports = {
                     } else {
                         const embed = new Discord.MessageEmbed()
                             .setColor('#FF0000')
-                            .setTitle(`${ip} is offline   :red_circle:`)
+                            .setTitle(`${ip} is offline`)
                             .setThumbnail('https://i.ibb.co/xzPRSmV/down.jpg')
                             .setDescription(`The server didn't return a ping.\nCheck if you entered the right ip.`)
                         message.channel.send(embed);

@@ -11,52 +11,72 @@ var jsonf = JSON.parse(fs.readFileSync('./config.json', 'utf8'));
 client.login(jsonf.TOKEN);
 const prefix = jsonf.PREFIX;
 
-// This function updates the channels
-const updateChannel = async () => {
-    const jsonf = JSON.parse(fs.readFileSync('./config.json', 'utf8'));
-    if(!jsonf.SID && !jsonf.NID) return;
-
-    // Change the name of the category to the right ip if it isnt
-    if(!(client.channels.cache.get(jsonf.CID).name == jsonf.IP + `'s status`)) {
-        client.channels.cache.get(jsonf.CID).setName(jsonf.IP + `'s status`)
-    }
-
-    fetch(`https://api.mcsrvstat.us/2/${jsonf.IP}`).then(async response => {
-        try {
-            const json = await response.json();
-
-            if(json.online == true) {
-                client.channels.cache.get(jsonf.SID).setName('🟢 ONLINE');
-                const chann = client.channels.cache.get(jsonf.NID)
-                chann.updateOverwrite(chann.guild.roles.everyone, { VIEW_CHANNEL: true });
-                chann.setName(`👥 Players online: ${json.players.online}`);
-
-                var logdata =  `${Date.now()},${jsonf.IP},${json.online},${json.players.online},${json.players.max}\n`;
-            }else {
-                client.channels.cache.get(jsonf.SID).setName('🔴 OFFLINE');
-                client.channels.cache.get(jsonf.NID).updateOverwrite(client.channels.cache.get(jsonf.NID).guild.roles.everyone, { VIEW_CHANNEL: false });
-                var logdata = `${Date.now()},${jsonf.IP},${json.online},x,x\n`
-            }
-    
-            if (!(jsonf.LOGGING == 'on')) return;
-            fs.writeFileSync('log.csv', logdata, {'flag':'a'});
-            console.log('Just logged a change!');
-
-        } catch(error) {
-            console.error(error);
-        }
-    }
-)}
-
-client.once('ready', () => {
-    console.log('The bot is up and running!');
-
+// / / / / / / / / / / / / / / / / / / /
+// This functin updates the status of the bot
+const updatestatus = async() => { 
+    // Update status
     if (jsonf.IP) {
         client.user.setActivity(jsonf.IP, {type: "WATCHING"});
     } else {
         client.user.setActivity('your Minecraft server', {type: "WATCHING"});
     }
-    
+    console.log('Status changed!')
+}
+
+// / / / / / / / / / / / / / / / / / /
+// This function updates the channels
+const updateChannel = async () => {
+    // Read the file again to update any changes
+    jsonf = JSON.parse(fs.readFileSync('./config.json', 'utf8'));
+
+    if(jsonf.SID && jsonf.NID) {
+
+        // Change the name of the category to the right ip if it isnt
+        if(!(client.channels.cache.get(jsonf.CID).name == jsonf.IP + `'s status`)) {
+            client.channels.cache.get(jsonf.CID).setName(jsonf.IP + `'s status`);
+        }
+
+        fetch(`https://api.mcsrvstat.us/2/${jsonf.IP}`)
+        .then(async response => {
+            try {
+                const json = await response.json();
+
+                if(json.online == true) {
+                    client.channels.cache.get(jsonf.SID).setName('🟢 ONLINE');
+                    const chann = client.channels.cache.get(jsonf.NID);
+                    chann.updateOverwrite(chann.guild.roles.everyone, { VIEW_CHANNEL: true });
+                    chann.setName(`👥 Players online: ${json.players.online}`);
+
+                    var logdata =  `${Date.now()},${jsonf.IP},${json.online},${json.players.online},${json.players.max}\n`;
+                } else {
+                    client.channels.cache.get(jsonf.SID).setName('🔴 OFFLINE');
+                    client.channels.cache.get(jsonf.NID).updateOverwrite(client.channels.cache.get(jsonf.NID).guild.roles.everyone, { VIEW_CHANNEL: false });
+
+                    var logdata = `${Date.now()},${jsonf.IP},${json.online},x,x\n`;
+                }
+
+                // Log chanhes if logging is turned on
+                if (jsonf.LOGGING == 'on') {
+                    fs.writeFileSync('log.csv', logdata, {'flag':'a'});
+                    console.log('Just logged a change!');
+                }
+
+            } catch(error) {
+                console.error(error); 
+            }
+        });
+
+    }
+
+    // Call the update status function to update the status of the bot
+    updatestatus()
+}
+
+client.once('ready', () => {
+    console.log('The bot is up and running!');
+
+    // Call the update status function to update the status of the bot
+    updatestatus()
 
     // Call the function that will ping the specifed server, update the channel names, log etc.
     setInterval(() => {

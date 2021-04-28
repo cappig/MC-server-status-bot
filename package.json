@@ -1,5 +1,5 @@
 {
-  "name": "ubot",
+  "name": "mc-server-status-bot",
   "version": "1.0.0",
   "description": "A discord bot that displays if a MC server is online",
   "main": "index.js",
