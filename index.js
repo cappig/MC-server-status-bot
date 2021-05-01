@@ -1,7 +1,6 @@
 const Discord = require('discord.js');
 const fs = require('fs');
 const fetch = require('node-fetch');
-const ms = require('ms');
 
 const client = new Discord.Client();
 client.commands = new Discord.Collection();
@@ -9,7 +8,6 @@ client.commands = new Discord.Collection();
 // Read the JSON config file with token, log in and set the prefix
 var jsonf = JSON.parse(fs.readFileSync('./config.json', 'utf8'));
 client.login(jsonf.TOKEN);
-const prefix = jsonf.PREFIX;
 
 // / / / / / / / / / / / / / / / / / / /
 // This functin updates the status of the bot
@@ -29,32 +27,43 @@ const updateChannel = async () => {
     // Read the file again to update any changes
     jsonf = JSON.parse(fs.readFileSync('./config.json', 'utf8'));
 
-    if(jsonf.SID && jsonf.NID) {
+    if(jsonf.IP) {
 
         // Change the name of the category to the right ip if it isnt
-        if(!(client.channels.cache.get(jsonf.CID).name == jsonf.IP + `'s status`)) {
-            client.channels.cache.get(jsonf.CID).setName(jsonf.IP + `'s status`);
+        if(jsonf.SID && jsonf.NID) { 
+            if(!(client.channels.cache.get(jsonf.CID).name == jsonf.IP + `'s status`)) {
+                client.channels.cache.get(jsonf.CID).setName(jsonf.IP + `'s status`);
+            }
         }
 
         fetch(`https://api.mcsrvstat.us/2/${jsonf.IP}`).then(async response => {
             try {
                 const json = await response.json();
-	                
-				console.log('Channels updated!');
 				
                 if(json.online == true) {
-                    client.channels.cache.get(jsonf.SID).setName('🟢 ONLINE');
-                    const chann = client.channels.cache.get(jsonf.NID);
-                    chann.updateOverwrite(chann.guild.roles.everyone, { VIEW_CHANNEL: true });
-                    chann.setName(`👥 Players online: ${json.players.online}`);
+                    if(jsonf.SID && jsonf.NID) {
+                        client.channels.cache.get(jsonf.SID).setName('🟢 ONLINE');
+                        const chann = client.channels.cache.get(jsonf.NID);
+                        chann.updateOverwrite(chann.guild.roles.everyone, { VIEW_CHANNEL: true });
+                        chann.setName(`👥 Players online: ${json.players.online}`);    
+                    }
 
-                    var logdata =  `${Date.now()},${jsonf.IP},${json.online},${json.players.online},${json.players.max}\n`;
+                    if (!json.players.list || jsonf.LOGPLAYERS == 'off') { 
+                        var logdata =  `\n${Date.now()},${jsonf.IP},${json.online},${json.players.online},x`;
+                    } else {
+                        var logdata =  `\n${Date.now()},${jsonf.IP},${json.online},${json.players.online},${json.players.list.toString().replace(/,/g, '.')}`;
+                    }
+                    
                 } else {
-                    client.channels.cache.get(jsonf.SID).setName('🔴 OFFLINE');
-                    client.channels.cache.get(jsonf.NID).updateOverwrite(client.channels.cache.get(jsonf.NID).guild.roles.everyone, { VIEW_CHANNEL: false });
+                    if(jsonf.SID && jsonf.NID) {
+                        client.channels.cache.get(jsonf.SID).setName('🔴 OFFLINE');
+                        client.channels.cache.get(jsonf.NID).updateOverwrite(client.channels.cache.get(jsonf.NID).guild.roles.everyone, { VIEW_CHANNEL: false });
+                    }
 
-                    var logdata = `${Date.now()},${jsonf.IP},${json.online},x,x\n`;
+                    var logdata = `\n${Date.now()},${jsonf.IP},${json.online},0,x,x`;
                 }
+
+                console.log('Channels updated!');
 
                 // Log chanhes if logging is turned on
                 if (jsonf.LOGGING == "on") {
@@ -82,7 +91,7 @@ client.once('ready', () => {
     // Call the function that will ping the specifed server, update the channel names, log etc.
     setInterval(() => {
         updateChannel()
-    }, ms(jsonf.UPINT))
+    }, jsonf.UPINT * 60000) 
 });
 
 // Command handeler stuff
@@ -93,9 +102,9 @@ for(const file of commandFiles) {
 }
 
 client.on('message', message => {
-    if(!message.content.startsWith(prefix) || message.author.bot) return;
+    if(!message.content.startsWith(jsonf.PREFIX) || message.author.bot) return;
 
-    const args = message.content.slice(prefix.length).split(/ +/);
+    const args = message.content.slice(jsonf.PREFIX.length).split(/ +/);
     const command = args.shift().toLowerCase();
     if (!client.commands.has(command)) return;
     try {

@@ -1,7 +1,14 @@
 # MC server status bot
 
-***This bot is still in development and some features aren't yet available***
-The [mcsrvstatus](https://api.mcsrvstat.us/) api is used to get the info about the server.
+Let everyone in your Discord server quickly see the status of a mc server:
+
+![img1](https://i.ibb.co/kQ05Pjx/example1.png)
+
+Create graphs, and log the status of a server:
+
+![img2](https://i.ibb.co/grR1NY9/chartex.png)
+
+<br>
 
 ## *Commands*
 Admin command:
@@ -18,6 +25,10 @@ Admin command:
 Normal commands:
 
 `mc!ping [ip]` Ping a specified ip. You can use the command with no arguments to ping the ip specified in the json file.
+
+`mc!log uptime` Create a chart of players online over time on the server.
+
+`mc!log playersonline` Create a chart of server uptime and calculate the uptime percentage.
 
 <br>
 
@@ -38,23 +49,33 @@ This is the standard empty config file that the python script will create:
     "TOKEN": "",
     "PREFIX": "mc!",
     "LOGGING": "on",
+    "LOGPLAYERS": "on",
     "IP":"",
+    "UPINT": "5",
     "SID": "",
     "NID": "",
-    "UPINT": "5min"
+    "CID": ""
+   
 }
 ```
 The TOKEN is replaced with the bot token. 
 
-SID is the status channel id and NID is the number of of players channel id. You can leave these to be blank and use the  `mc!setup` command to automatically create these channels and save the id's to the file or paste these id's into the json yourself. 
+SID is the status channel id and NID is the number of of players channel id. You can leave these to be blank and use the  `mc!setup` command to automatically create these channels and save the id's to the file or paste these id's into the json yourself. CID is the id of the category these channels are in.
+
+UPINT is the time between updates to sthe status and logs.
 
 LOGGING can be turned of in the config file or an admin can use the `mc!log [on/off]` command to turn it off or on. Time is logged in the [UNIX format](https://en.wikipedia.org/wiki/Unix_time).
 
-#### *Other files*
+#### *Other files and some notes*
 `icon.png` is the icon I created and use for the bot. Feel free to use it for yourself.
 `Procfile` is the config file will declare the worker for hosting the bot on Heroku.
 
+The [mcsrvstatus](https://api.mcsrvstat.us/) api is used to get the info about the server.
 <br>
 
-## *Logging, graphing and displaying data*
-If `LOGGING` is set to on in the config.json file the bot will log the status of the server every time the channels update. Nothing will be logged if you didn't set these channels up. **Im still working on the logging and graphing so graphing the logs is not available yet.**
+## *Logging, graphing and displaying the data*
+If `LOGGING` is set to on in the config.json file the bot will log the status of the server every update interval.
+
+You can log the usernames of the connected players. This can be changed by changing the `LOGPLAYERS` to on or off in the config file. *Note that players are only logged for smaller servers*
+
+Any lines in the logs that have a ip different than the one in the config won't be logged.

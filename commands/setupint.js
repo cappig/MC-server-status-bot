@@ -19,7 +19,7 @@ module.exports = {
 
         var json = JSON.parse(fs.readFileSync('./config.json', 'utf8'));
         // Check if args only contains numbers
-        json.UPINT = args + 'min';
+        json.UPINT = args;
 
         fs.writeFileSync('./config.json', JSON.stringify(json, null, 2));
         message.channel.send(`The update interval has been set to ${args} minutes. Please restart the bot for the changes to take effect!`)

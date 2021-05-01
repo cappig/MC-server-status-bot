@@ -39,14 +39,18 @@ elif "-sd" in opts:
         content['TOKEN'] = ''
     content['PREFIX'] = 'mc!'
     content['LOGGING'] = 'on'
+    content['LOGPLAYERS'] = 'on'
+    content['UPINT'] = '5min'
     content['IP'] = ''
     content['SID'] = ''
     content['NID'] = ''
     content['CID'] = ''
-    content['UPINT'] = '5min'
 
-    with open('config.json', 'w') as outfile:
-        json.dump(content, outfile, indent=2)
+    with open('config.json', 'w') as f:
+        json.dump(content, f, indent=2)
+
+    with open('log.csv', 'w') as f:
+        f.write("date,ip,status,playersonline,playerslist")
 
     if args:
         print("done \nStarting the bot...")
@@ -68,15 +72,19 @@ elif "-env" in opts:
     content = {}
     content['PREFIX'] = 'mc!'
     content['LOGGING'] = 'on'
+    content['LOGPLAYERS'] = 'on'
+    content['UPINT'] = '5min'
     content['IP'] = ''
     content['SID'] = ''
     content['NID'] = ''
     content['CID'] = ''
-    content['UPINT'] = '5min'
 
-    with open('config.json', 'w') as outfile:
-        json.dump(content, outfile, indent=2)
-        
+    with open('config.json', 'w') as f:
+        json.dump(content, f, indent=2)
+    
+    with open('log.csv', 'w') as f:
+        f.write("date,ip,status,playersonline,playerslist")
+
     with open('index.js', 'r+') as f:
         rawfile = f.read()
         f.seek(0, 0)
