@@ -68,9 +68,9 @@ LOGGING can be turned of in the config file or an admin can use the `mc!log [on/
 
 #### *Other files and some notes*
 `icon.png` is the icon I created and use for the bot. Feel free to use it for yourself.
-`Procfile` is the config file will declare the worker for hosting the bot on Heroku.
 
 The [mcsrvstatus](https://api.mcsrvstat.us/) api is used to get the info about the server.
+
 <br>
 
 ## *Logging, graphing and displaying the data*

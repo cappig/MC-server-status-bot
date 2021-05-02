@@ -27,7 +27,7 @@ module.exports = {
             var label = 'uptime';
             var embedtitle = `Server uptime`;
             var fill = true;
-            //var embeddescr = `The server has a uptime of *${upt}*`
+            var max = 1;
         } 
         
         else if (args == 'playersonline') {
@@ -115,7 +115,15 @@ module.exports = {
             return;
         }
 
-        const width = 500;
+        // Change the width of the chart based on the number of lines in the log
+        var width;
+        if (ylbl.length <= 30)  {
+            width = 500;
+        } else if (ylbl.length <= 50) {
+            width = 600;
+        } else {
+            width = 700;
+        }
         const height = 400;
         // / / / / / / / / / / / / / / /
         // Chart.js stuff begins here
@@ -141,21 +149,28 @@ module.exports = {
                     legend: {
                         labels: {
                             fontColor: "rgb(247, 247, 247)",
-                            fontSize: 13
+                            fontSize: 15
                         }
                     },
                     scales: {
                         yAxes: [{
                             ticks: {
                                 fontColor: "rgb(247, 247, 247)",
-                                fontSize: 13,
+                                fontSize: 15,
                                 stepSize: 1,
+                                max,
+                                callback: function(value, index, values) {
+		                            if(args == 'uptime') { 
+		                                if(value == 1) return 'online';
+		                            	if(value == 0) return 'offline';
+		                            } else return value;
+                                }
                             }
                         }],
                         xAxes: [{
                             ticks: {
                                 fontColor: "rgb(247, 247, 247)",
-                                fontSize: 11,
+                                fontSize: 13,
                                 stepSize: 1,
                             }
                         }]

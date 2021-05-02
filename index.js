@@ -1,6 +1,7 @@
 const Discord = require('discord.js');
 const fs = require('fs');
 const fetch = require('node-fetch');
+const moment = require('moment');
 
 const client = new Discord.Client();
 client.commands = new Discord.Collection();
@@ -18,7 +19,7 @@ const updatestatus = async() => {
     } else {
         client.user.setActivity('your Minecraft server', {type: "WATCHING"});
     }
-    console.log('Status changed!')
+    console.log(`[${moment().format('YYYY-MM-DD, h:mm:ss a')}] Status changed!`)
 }
 
 // / / / / / / / / / / / / / / / / / /
@@ -49,9 +50,9 @@ const updateChannel = async () => {
                     }
 
                     if (!json.players.list || jsonf.LOGPLAYERS == 'off') { 
-                        var logdata =  `\n${Date.now()},${jsonf.IP},${json.online},${json.players.online},x`;
+                        var logdata =  `\n${moment().unix()},${jsonf.IP},${json.online},${json.players.online},x`;
                     } else {
-                        var logdata =  `\n${Date.now()},${jsonf.IP},${json.online},${json.players.online},${json.players.list.toString().replace(/,/g, '.')}`;
+                        var logdata =  `\n${moment().unix()},${jsonf.IP},${json.online},${json.players.online},${json.players.list.toString().replace(/,/g, '.')}`;
                     }
                     
                 } else {
@@ -60,15 +61,15 @@ const updateChannel = async () => {
                         client.channels.cache.get(jsonf.NID).updateOverwrite(client.channels.cache.get(jsonf.NID).guild.roles.everyone, { VIEW_CHANNEL: false });
                     }
 
-                    var logdata = `\n${Date.now()},${jsonf.IP},${json.online},0,x,x`;
+                    var logdata = `\n${moment().unix()},${jsonf.IP},${json.online},0,x`;
                 }
 
-                console.log('Channels updated!');
+                console.log(`[${moment().format('YYYY-MM-DD, h:mm:ss a')}] Channels updated!`);
 
                 // Log chanhes if logging is turned on
                 if (jsonf.LOGGING == "on") {
                     fs.writeFileSync('log.csv', logdata, {'flag':'a'});
-                    console.log('Just logged a change!');
+                    console.log(`[${moment().format('YYYY-MM-DD, h:mm:ss a')}] Just logged a change!`);
                 }
 
             } catch(error) {
@@ -83,7 +84,7 @@ const updateChannel = async () => {
 }
 
 client.once('ready', () => {
-    console.log('The bot is up and running!');
+    console.log(`[${moment().format('YYYY-MM-DD, h:mm:ss a')}] The bot is up and running!`);
 
     // Call the update status function to update the status of the bot
     updatestatus()

@@ -1,4 +1,5 @@
 #!/usr/bin/python3
+# -*- coding: utf-8 -*-
 import os, sys, json, fileinput
 
 opts = [opt for opt in sys.argv[1:] if opt.startswith("-")]
