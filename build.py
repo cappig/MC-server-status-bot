@@ -67,7 +67,7 @@ elif "-env" in opts:
 
     with fileinput.FileInput('index.js', inplace=True) as file:
         for line in file:
-            print(line.replace('jsonf.TOKEN', 'process.env.TOKEN'), end='')
+            print(line.replace('jsonf.TOKEN', 'process.env.TOKEN'))
             
     print("\nWriting config file ...")
     content = {}
