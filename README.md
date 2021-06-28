@@ -1,5 +1,8 @@
 # MC server status bot
 
+A BETTER VERSION OF THIS BOT IS COMING SOON!
+I AM NO LONGER WORKING ON THIS REPO!
+
 Let everyone in your Discord server quickly see the status of a mc server:
 
 ![img1](https://i.ibb.co/kQ05Pjx/example1.png)
