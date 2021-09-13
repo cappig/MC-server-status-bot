@@ -1,5 +1,5 @@
 # MC server status bot
-# **A BETTER VERSION OF THIS BOT IS COMING SOON! I AM NO LONGER WORKING ON THIS REPO!**
+# **THIS PROJECT IS NO LONGER MAINTAINED! PARTS OF THE CODE ARE USED IN [the new version of the bot](https://github.com/cappig/MC-status-bot)
 
 Let everyone in your Discord server quickly see the status of a mc server:
 
